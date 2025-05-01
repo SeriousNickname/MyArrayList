@@ -6,6 +6,7 @@ package Papka;
 public class MyArrayList<T> {
     int capacity, size, index;
     T[] content;
+    T[] doubleContent;
 
 
     /**
@@ -27,8 +28,9 @@ public class MyArrayList<T> {
      * Метод добавления элемента в массив в конец массива
      * */
     public void add(T element){
+        //System.out.println("Size " + size); // трока для отладки
         if (size == content.length) { // проверка на наличие ёмкости
-            doubling();
+            content = (T[]) doubling();
         }
         content[ size++ ] = element;
     }
@@ -37,23 +39,25 @@ public class MyArrayList<T> {
      * Метод добавления элемента в массив в ячейку под индексом
      * */
     public void add(int index, T element) {
-        if (size == content.length) { // проверка на наличие ёмкости
-            doubling();
+        if (size == content.length || index >= content.length) { // проверка на наличие ёмкости
+            content = (T[]) doubling();
         }
         for (int i = size; i > index ; i--) { //Идём с конца, сдвигаем все элементы в хранилище на 1 в право, чтобы освободить место для нового элемента
             content[i] = content[ i-1 ];
         }
-        size++;
         content[index] = element;
+        size++;
     }
 
-    public void doubling(){
-        T[] doubleContent = (T[]) new Object[(content.length * 2)];     // создаём в 2 раза больший массив и переносим туда все данные
+    public Object[] doubling(){
+        int doubleCapacity = content.length * 2;
+        doubleContent = (T[]) new Object[doubleCapacity];     // создаём в 2 раза больший массив и переносим туда все данные
         System.arraycopy(content,
                 0,
                 doubleContent,
                 0,
                 size); //Посмотрел System.arraycopy в реализации java.util, не знал про этот метод
+        return doubleContent;
     }
 
     public void deleteLast() {
@@ -102,4 +106,4 @@ public class MyArrayList<T> {
     public int size() { return size; }
 
 
-}}
+}
